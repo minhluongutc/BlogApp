@@ -4,9 +4,10 @@ import com.viettel.blogapp.payload.PostDto;
 import com.viettel.blogapp.payload.PostResponse;
 import com.viettel.blogapp.service.PostService;
 import com.viettel.blogapp.utils.AppConstants;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class PostController {
         this.postService = postService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     // create blog post\
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
@@ -47,6 +49,7 @@ public class PostController {
         return new ResponseEntity<>(postService.updatePost(postDto, id), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> detetePostById(@PathVariable long id) {
         postService.deletePostById(id);
